@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updateQuestion();
     });
 
+    document.getElementById('answerButton').addEventListener('click', () => {
+        checkAnswer();
+    });
+
     document.getElementById('answer').addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
             checkAnswer();
@@ -39,12 +43,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (userAnswer === answer) {
             score++;
             document.getElementById('result').textContent = '正解！';
-            document.getElementById('score').textContent = `スコア: ${score}`;
         } else {
             document.getElementById('result').textContent = '不正解！';
         }
-        updateQuestion();
+        updateScore();
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            updateQuestion();
+        } else {
+            endGame();
+        }
         document.getElementById('answer').value = '';
+    }
+
+    function updateScore() {
+        document.getElementById('score').textContent = `スコア: ${score}`;
     }
 
     function startTimer() {
@@ -53,9 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('timer').textContent = `残り時間: ${timeLeft}秒`;
             if (timeLeft === 0) {
                 clearInterval(timer);
-                alert(`ゲーム終了！ スコア: ${score}`);
-                location.reload();
+                endGame();
             }
         }, 1000);
+    }
+
+    function endGame() {
+        alert(`ゲーム終了！ スコア: ${score}`);
+        location.reload();
     }
 });
