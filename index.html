@@ -1,1 +1,26 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>因数分解ゲーム </title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>因数分解ゲーム</h1>
+        <button id="startButton">スタート</button>
+        <h2>入力の仕方(x+a)(x+b)になったとき</h2>
+      　<h2>a,b　と回答してください。</h2>
+        <div id="gameSection" style="display: none;">
+            <p id="question"></p>
+            <input type="text" id="answer" placeholder="因数分解した形を入力してください">
+            <button onclick="checkAnswer()">解答する</button>
+            <p id="result"></p>
+            <p id="score">スコア: 0</p>
+            <p id="timer">残り時間: 300秒</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
