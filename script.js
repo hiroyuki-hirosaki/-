@@ -19,10 +19,10 @@ let timeLeft = 300;
 
 function generateQuestion() {
     const questions = [
-        { question: '2次方程式 x^2 + 5x + 6 を因数分解せよ！', answer: '2,3' },
-        { question: '2次方程式 x^2 + 4x - 5 を因数分解せよ！', answer: '-1,5' },
-        { question: '2次方程式 x^2 - 9 を因数分解せよ！', answer: '-3,3' },
-        { question: '2次方程式 x^2 + 8x + 16 を因数分解せよ！', answer: '4' }
+        { question: 'x^2 + 5x + 6 を因数分解せよ！', answer: '2,3' },
+        { question: 'x^2 + 4x - 5 を因数分解せよ！', answer: '-1,5' },
+        { question: 'x^2 - 9 を因数分解せよ！', answer: '-3,3' },
+        { question: 'x^2 + 8x + 16 を因数分解せよ！', answer: '4' }
     ];
     const randomIndex = Math.floor(Math.random() * questions.length);
     return questions[randomIndex];
