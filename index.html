@@ -3,22 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2次方程式因数分解ゲーム (a=1)</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>因数分解ゲーム</title>
+    <style>
+        /* スタイルシート */
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>2次方程式因数分解ゲーム (a=1)</h1>
-        <button id="startButton">スタート</button>
-        <div id="gameSection" style="display: none;">
-            <p id="question"></p>
-            <input type="text" id="answer" placeholder="因数分解した形を入力してください">
-            <button id="answerButton">解答する</button>
-            <p id="result"></p>
-            <p id="score">スコア: 0</p>
-            <p id="timer">残り時間: 30秒</p>
-        </div>
+        <h1>因数分解ゲーム</h1>
+        <p id="question">問題がここに表示されます</p>
+        <input type="text" id="answer" placeholder="ここに因数分解を入力">
+        <button id="answerButton">解答する</button>
+        <p id="result"></p>
+        <p id="score" style="display: none;">スコア: <span id="scoreValue">0</span></p>
+        <p id="timer">残り時間: <span id="timerValue">120</span>秒</p>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        let questionCount = 0; // 問題数をカウント
+        let score = 0; // スコア
+        const maxQuestions = 10; // 最大問題数
+        const maxTime = 120; // 最大時間（秒）
+        let timeLeft = maxTime; // 残り時間
+
+        // ランダムな整数を生成する関数（0は含まない）
+        function generateRandomIntegerWithoutZero(min, max) {
+            let num;
+            do {
+                num = Math.floor(Math.random() * (max - min + 1)) + min;
+            } while (num === 0); // 0を含まないようにする
+            return num;
+        }
+
+        // 整数解を持つ2次方程式を生成する関数
+        function generateRandomQuadraticEquation() {
+            let a, b, c, x1, x2;
+            do {
+                a = generateRandomIntegerWithoutZero(-10, 10); // aを0以外の整数で生成
+                b = generateRandomIntegerWithoutZero(-10, 10); // bを0以外の整数で生成
+                c = generateRandomIntegerWithoutZero(-10, 10); // cを0以外の整数で生成
+
+                // 判別式が非負かつ解が整数かどうかをチェック
+                if (b * b - 4 * a * c >= 0) {
+                    x1 = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a);
+                    x2 = (-b - Math.sqrt(b * b - 4 * a * c)) / (2 * a);
+                }
+            } while (!Number.isInteger(x1) || !Number.isInteger(x2)); // x1とx2が整数であるかを確認
+
+            const equation = `x² ${b >= 0 ? '+' : '-'} ${Math.abs(b)}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)} = 0`;
+            const roots = `(x ${x1 >= 0 ? '-' : '+'} ${Math.abs(x1)})(x ${x2 >= 0 ? '-' : '+'} ${Math.abs(x2)}) = 0`;
+
+            return { equation, roots };
+        }
+
+        // 解答をチェックする関数
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer').value.trim();
+            const { roots } = generateRandomQuadraticEquation(); // 解答を取得
+
+            if (userAnswer === roots) {
+                // 正解の処理
+                document.getElementById('result').textContent = '正解！';
+                questionCount++; // 問題数をインクリメント
+                score++; // スコアをインクリメント
+                document.getElementById('scoreValue').textContent = score;
+                if (questionCount === maxQuestions) {
+                    endGame();
+                } else {
+                    // 次の問題を表示
+                    const { equation } = generateRandomQuadraticEquation();
+                    document.getElementById('question').textContent = equation;
+                    document.getElementById('answer').value = ''; // 解答欄をクリア
+                }
+            } else {
+                {
+                    // 不正解の処理
+                    document.getElementById('result').textContent = '不正解！';
+                    questionCount++; // 問題数をインクリメント
+                    if (questionCount === maxQuestions) {
+                        endGame();
+                    } else {
+                        // 次の問題を表示
+                        const { equation } = generateRandomQuadraticEquation();
+                        document.getElementById('question').textContent = equation;
+                        document.getElementById('answer').value = ''; // 解答欄をクリア
+                    }
+                }
+            }
+        }
+
+        // ゲーム終了の処理
+        function endGame() {
+            document.getElementById('result').textContent = 'ゲームクリア！';
+            document.getElementById('answerButton').disabled = true; // 解答ボタンを無効化
+            document.getElementById('score').style.display = 'block'; // スコアを表示
+            clearInterval(timerInterval); // タイマーを停止
+        }
+
+        // 解答ボタンにクリックイベントを追加
+        document.getElementById('answerButton').addEventListener('click', checkAnswer);
+
+        // 解答欄でEnterキーが押されたときにも解答をチェック
+        document.getElementById('answer').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // 最初の問題を表示
+        const { equation } = generateRandomQuadraticEquation();
+        document.getElementById('question').textContent = equation;
+
+        // 制限時間の処理
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timerValue').textContent = timeLeft;
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }, 1000); // 1秒ごとにカウントダウン
+    </script>
 </body>
 </html>
