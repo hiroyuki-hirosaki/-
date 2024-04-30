@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let score = 0;
 let timer;
-let timeLeft = 300;
+let timeLeft = 120;
 
 function generateQuestion() {
     const questions = [
